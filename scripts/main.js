@@ -19,9 +19,7 @@
  */
 var app = (function() {
 
-
-
-    todoList = {};
+    var todoList = {};
 
     /* App must allow users to create multiple TODO List.
      * E.g: Pending List, On hold List, Completed List etc.
