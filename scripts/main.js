@@ -15,8 +15,9 @@
  */
 
 /*Following Reveling Modular Pattern(IIFE) in this code base so that the global namespace is not populated
- * app contains 3 methods which are exposed to the public , rest all the functions and variables are private
+ * app contains 4 methods which are exposed to the public , rest all the functions and variables are private
  */
+
 var app = (function() {
 
     var todoList = {};
@@ -96,15 +97,13 @@ var app = (function() {
         };
     }();
 
-
     /*  Constructor for todo. Currently Supports only Adding Description.
      *  We can add the functionality of status as well.
      *  THis Function acts as a Class to instantiate new instances for todo's
      *  @type : Private constructor
      *  @param : Description : the description of the todo
      */
-
-    Todo = function() {
+    var Todo = function() {
 
         var todoIdGenerator = 101;
 
