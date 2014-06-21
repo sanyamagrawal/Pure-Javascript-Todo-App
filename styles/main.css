@@ -1,0 +1,142 @@
+.searchBar {
+  padding: 10px;
+  background: black;
+}
+
+.searchBox {
+  width : 250px;
+}
+
+.mainContainer {
+    padding:  100px 30px 30px 30px;
+    margin: 0 auto;
+}
+
+.list {
+  background: #dbdbdb;
+  border-radius: 3px;
+  margin: 20px 5px 0px 5px;
+  padding: 4px 3px 3px;
+  position: relative;
+  width: 300px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.list-header-name {
+  position: relative;
+  padding: 3px 26px 2px 6px;
+  min-height: 19px;
+  font-weight: bold;
+  display: inline;
+  font-size: 15px;
+  line-height: 18px;
+  margin: 0;
+  min-height: 19px;
+  min-width: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+.open-card-composer {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  color: #939393;
+  display: block;
+  margin: 2px -3px -3px;
+  padding: 7px 10px;
+  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.open-card-composer:hover {
+  background: #c3c3c3;
+  color: #222;
+  text-decoration: underline;
+}
+
+.list-cards {
+  clear: both;
+  margin-bottom: 0;
+  min-height: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 4px 1px;
+  z-index: 1;
+}
+
+.list-card {
+  background-color: #fff;
+  border-bottom: 1px solid #bdbdbd;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  max-width: 300px;
+  min-height: 20px;
+  position: relative;
+  z-index: 0;
+  transition: background-color 0.5s ease-in;
+    -moz-transition: background-color 0.5s ease-in;
+    -webkit-transition: background-color 0.5s ease-in;
+    -o-transition: background-color 0.5s ease-in;
+}
+
+.list-card-details {
+  padding: 8px 46px 8px 8px;
+  position: relative;
+  z-index: 10;
+
+}
+
+.list-card:hover {
+  background-color: #f2f2f2;
+  border-bottom-color: #b3b3b3;
+}
+
+.list-card:hover .deleteIcon:after {
+  content: "\2716";
+  font-size: 20px;
+  padding: 10px;
+}
+
+.list-card:hover .editIcon:after {
+  content: "\270E";
+  font-size: 20px;
+
+}
+.list-add-container {
+  box-sizing: border-box;
+  padding: 6;
+  margin-bottom: 6px;
+}
+
+.tickIcon:after {
+  content: "\2713";
+  font-size : 20px;
+  right : 5px;
+}
+
+.icons.tickIcon {
+  right : 5px;
+}
+
+.icons {
+  position: absolute;
+  top: 20%;
+  right: 0px;
+}
+
+.crossIcon {
+  cursor: pointer;
+}
+
+.crossIcon:after {
+  content: "\2716";
+  font-size: 25px;
+  margin-left: 20px;
+  color: #a6a6a6;
+}
