@@ -19,53 +19,85 @@
  */
 var app = (function() {
 
-    var globalCountListId = 0,
-        letMeTest = 101,
-        todoList = {};
 
 
-    /* Application supports a user can create multiple list of Todo
-     * like Pending todo list, On hold todo.
+    todoList = {};
+
+    /* App must allow users to create multiple TODO List.
+     * E.g: Pending List, On hold List, Completed List etc.
      * This constructor supports adding todos to individual list
+     * We have scoped List to app
      * @type : private Constructor
      * @param : name of the new List
      */
-    function TodoList(name) {
-        /*todo is an object and not an array because we support deleting a todo.
-          and as such we do not need to iterate over an array to retrive which to do
-          needs to be deleted. WE can think of it as MAP of Todo's
-        */
-        var todo = {},
-            name = name || "General",
-            id = ++globalCountListId;
+    var List = function() {
 
-        //return the name of the list
-        this.getName = function() {
-            return name;
-        };
+        /*  Private Static Variable :
+         *  Will Be Initialized Only Once.
+         *  Used To Generate ID's For List of Todo
+         */
+        var listIdGenerator = 0;
 
-        //returns the id of the list
-        this.getId = function() {
-            return id;
-        };
+        //Function to generate Id For TodoList. Currently its a simple generator which can be used to create
+        //Complicated ID as well.
+        function generateId() {
+            return ++listIdGenerator;
+        }
 
-        //adds a new Todo to the list
-        this.addTodo = function(newTodo) {
-            todo[newTodo.getId()] = newTodo;
-        };
+        return function(todoListName) {
 
-        //removes a todo from the list
-        this.removeTodo = function(id) {
-            if (todo[id]) {
-                return delete todo[id];
+            /* Todo is an object and not an array because we support deleting a todo.
+             * and as such we do not need to iterate over an array to retrive which to do
+             * needs to be deleted. WE can think of it as MAP of Todo's
+             */
+
+            //Implementing Data hiding and Encuplation: Private Members Through Closures
+            var todo = {},
+                name,
+                id;
+
+            //Sets Name of a List, If Undefined falls back to "UnNamed List"
+            this.setName = function(listName) {
+                name = listName || "UnNamed List";
             }
-        };
 
-        //sends the whole list of todo's
-        this.getTodoList = function() {
-            return todo;
+            //return the name of the list
+            this.getName = function() {
+                return name;
+            };
+
+            //Method To Set Id Of a List Internally
+            this.setId = function() {
+                id = generateId();
+            };
+
+            //returns the id of the list
+            this.getId = function() {
+                return id;
+            };
+
+            //adds a new Todo to the list
+            this.addTodo = function(newTodo) {
+                todo[newTodo.getId()] = newTodo;
+            };
+
+            //removes a todo from the list
+            this.removeTodo = function(id) {
+                if (todo[id]) {
+                    return delete todo[id];
+                }
+            };
+
+            //sends the whole list of todo's
+            this.getTodoList = function() {
+                return todo;
+            };
+
+            this.setName(todoListName);
+            this.setId();
         };
-    }
+    }();
+
 
     /*  Constructor for todo. Currently Supports only Adding Description.
      *  We can add the functionality of status as well.
@@ -73,22 +105,42 @@ var app = (function() {
      *  @type : Private constructor
      *  @param : Description : the description of the todo
      */
-    function Todo(description, status) {
-        var description = description || "",
-            id = letMeTest++;
 
-        this.getDescription = function() {
-            return description;
-        };
+    Todo = function() {
 
-        this.setDescription = function(desc) {
-            description = desc;
-        };
+        var todoIdGenerator = 101;
 
-        this.getId = function() {
-            return id;
-        };
-    }
+        function generateId() {
+            return ++todoIdGenerator;
+        }
+
+        return function(descrp) {
+
+            var description,
+                id;
+
+            //Getter and Setter for Description Of A Todo
+            this.setDescription = function(desc) {
+                description = desc;
+            };
+
+            this.getDescription = function() {
+                return description;
+            };
+
+            //Getter and Setter for Id
+            this.setId = function() {
+                id = generateId();
+            };
+
+            this.getId = function() {
+                return id;
+            };
+
+            this.setId();
+            this.setDescription(descrp);
+        }
+    }();
 
     /* Function to toggle the Add New List Button and show A textbox and Add Button Node
      * To Accept New List.
@@ -128,11 +180,13 @@ var app = (function() {
     /* Creates a new list of TOdo and calls the initial rendering function.*/
     function appendList() {
 
-        var listName = document.getElementById("listName"),
-            list = new TodoList(listName.value);
+        var listNode = document.getElementById("listName"),
+            listName = listNode.value,
+            list;
 
+        list = new List(listName);
         showAddNewListNode();
-        todoList[globalCountListId] = list;
+        todoList[list.getId()] = list;
         renderList(list);
     }
 
@@ -250,14 +304,15 @@ var app = (function() {
 
         if (currentTodo.value) {
             newTodo = new Todo(currentTodo.value);
+            currentTodo.value = "";
             list.addTodo(newTodo);
-            renderTodo(newTodo, list, event.target);
+            renderTodo(newTodo, list);
 
         }
     }
 
     /*Shows a Todo List in the UI , By creating it dynamically*/
-    function renderTodo(todo, list, node) {
+    function renderTodo(todo, list) {
         var div,
             temp,
             name,
