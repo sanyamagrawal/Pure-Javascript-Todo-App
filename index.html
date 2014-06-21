@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Todo - Sanyam Agrawal
+        </title>
+        <link rel="stylesheet" type="text/css" href="styles/root.css">
+        <link rel="stylesheet" type="text/css" href="styles/main.css">
+        <link rel="stylesheet" type="text/css" href="styles/elements.css">
+        <link rel="stylesheet" type="text/css" href="styles/button.css">
+        <script type="text/javascript" src="scripts/main.js"></script>
+    </head>
+
+    <body>
+        <div class="searchBar width100Percentage fixedPosition centerAligned">
+            <h3 class="inlineBlock floatLeft"> Todo List</h3>
+
+            <div id="addListButton" class="show">
+                <input type="button" class="primary" value="Add New List" onclick="app.showNewListNode(); return false;" />
+            </div>
+
+            <div id="newListNode" class="hide newListNode">
+                <input id="listName" class="searchBox" autofocus onkeypress="app.handleKeyPress(event)" type="text" placeHolder="Enter The Type Of Todo List">
+                <input type="button" class="primary" value="Create" onclick="app.appendList(); return false;" >
+                <input type="button" class="secondary" value="Cancel" onclick="app.showAddNewListNode(); return false;" >
+            </div>
+
+        </div>
+
+        <div class="table width100Percentage mainContainer">
+            <div id = "list-area" class="clearfix lists"></div>
+        </div>
+
+    </body>
+
+</html>
