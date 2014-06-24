@@ -119,7 +119,7 @@ body .tableRow {
 }
 
 body .hide {
-  display: none;
+  display: none !important;
 }
 
 body .show {

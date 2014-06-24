@@ -37,8 +37,10 @@ var app = (function() {
          */
         var listIdGenerator = 0;
 
-        //Function to generate Id For TodoList. Currently its a simple generator which can be used to create
-        //Complicated ID as well.
+        /* Function to generate Id For TodoList. Currently its a simple generator which can be used to create
+         * Complicated ID as well.
+         * PRIVATE STATIC FUNCTION
+         */
         function generateId() {
             return ++listIdGenerator;
         }
@@ -50,52 +52,54 @@ var app = (function() {
              * needs to be deleted. WE can think of it as MAP of Todo's
              */
 
-            //Implementing Data hiding and Encuplation: Private Members Through Closures
-            var todo = {},
-                name,
-                id;
-
-            //Sets Name of a List, If Undefined falls back to "UnNamed List"
-            this.setName = function(listName) {
-                name = listName || "UnNamed List";
-            }
-
-            //return the name of the list
-            this.getName = function() {
-                return name;
-            };
-
-            //Method To Set Id Of a List Internally
-            this.setId = function() {
-                id = generateId();
-            };
-
-            //returns the id of the list
-            this.getId = function() {
-                return id;
-            };
-
-            //adds a new Todo to the list
-            this.addTodo = function(newTodo) {
-                todo[newTodo.getId()] = newTodo;
-            };
-
-            //removes a todo from the list
-            this.removeTodo = function(id) {
-                if (todo[id]) {
-                    return delete todo[id];
-                }
-            };
-
-            //sends the whole list of todo's
-            this.getTodoList = function() {
-                return todo;
-            };
+            this.todo = {};
+            this.name = "";
+            this.id = 0;
 
             this.setName(todoListName);
-            this.setId();
+            this.setId(generateId());
         };
     }();
+
+    List.prototype = {
+        //Sets Name of a List, If Undefined falls back to "UnNamed List"
+
+        setName: function(listName) {
+            this.name = listName || "UnNamed List";
+        },
+
+        //return the name of the list
+        getName: function() {
+            return this.name;
+        },
+
+        //Method To Set Id Of a List Internally
+        setId: function(id) {
+            this.id = id;
+        },
+
+        //returns the id of the list
+        getId: function() {
+            return this.id;
+        },
+
+        //adds a new Todo to the list
+        addTodo: function(newTodo) {
+            this.todo[newTodo.getId()] = newTodo;
+        },
+
+        //removes a todo from the list
+        removeTodo: function(id) {
+            if (this.todo[id]) {
+                return delete this.todo[id];
+            }
+        },
+
+        //sends the whole list of todo's
+        getTodoList: function() {
+            return this.todo;
+        }
+    };
 
     /*  Constructor for todo. Currently Supports only Adding Description.
      *  We can add the functionality of status as well.
@@ -111,33 +115,38 @@ var app = (function() {
             return ++todoIdGenerator;
         }
 
-        return function(descrp) {
+        return function(desc) {
 
-            var description,
-                id;
+            this.description = "";
+            this.id = 0;
 
-            //Getter and Setter for Description Of A Todo
-            this.setDescription = function(desc) {
-                description = desc;
-            };
-
-            this.getDescription = function() {
-                return description;
-            };
-
-            //Getter and Setter for Id
-            this.setId = function() {
-                id = generateId();
-            };
-
-            this.getId = function() {
-                return id;
-            };
-
-            this.setId();
-            this.setDescription(descrp);
-        }
+            this.setId(generateId());
+            this.setDescription(desc);
+        };
     }();
+
+
+    Todo.prototype = {
+
+        //Getter and Setter for Description Of A Todo
+        setDescription: function(desc) {
+            this.description = desc;
+        },
+
+        getDescription: function() {
+            return this.description;
+        },
+
+        //Getter and Setter for Id
+        setId: function(id) {
+            this.id = id;
+        },
+
+        getId: function() {
+            return this.id;
+        }
+
+    }
 
     /* Function to toggle the Add New List Button and show A textbox and Add Button Node
      * To Accept New List.
@@ -206,6 +215,7 @@ var app = (function() {
             buttonNode,
             addButton,
             hideNode,
+            spanContainer,
             listId = list.getId(),
             node = document.getElementById("list-area");
 
@@ -226,14 +236,28 @@ var app = (function() {
         todoContainer.setAttribute("id", "cards_" + listId);
         mainContainer.appendChild(todoContainer);
 
+        spanContainer = document.createElement("span");
+        spanContainer.setAttribute("class", "clearfix");
+        spanContainer.setAttribute("id", "button_" + listId);
+        mainContainer.appendChild(spanContainer);
+
         //Add New Todo Link Node
         linkNode = document.createElement("a");
-        linkNode.setAttribute("class", "open-card-composer");
-        linkNode.setAttribute("id", "button_" + listId);
+        linkNode.setAttribute("class", "floatLeft open-card-composer");
+        //linkNode.setAttribute("id", "button_" + listId);
         linkNode.innerHTML = "Add a todo...";
         linkNode.addEventListener("click", showAddTodoNode);
         linkNode.parentId = listId;
-        mainContainer.appendChild(linkNode);
+        spanContainer.appendChild(linkNode);
+
+        //Add New Todo Link Node
+        linkNode = document.createElement("a");
+        linkNode.setAttribute("class", "floatRight open-card-composer");
+        //linkNode.setAttribute("id", "button_" + listId);
+        linkNode.innerHTML = "Delete The List...";
+        linkNode.addEventListener("click", deleteList);
+        linkNode.parentId = listId;
+        spanContainer.appendChild(linkNode);
 
         //Node To Add New Todo's
         addTodoContainer = document.createElement("div");
@@ -282,6 +306,7 @@ var app = (function() {
         hideNode(nodeToHide);
         showNode(nodeToShow);
     }
+
     /*Utility method to show Add A todo Link*/
     function hideAddTodoNode(event) {
         var parentId = event.target.parentId,
@@ -357,8 +382,7 @@ var app = (function() {
             parentId = node.parentId,
             todoId = node.todo.getId(),
             todoNode = document.getElementById(todoId),
-            editNode = document.getElementById("editNode_" + todoId),
-            desc;
+            editNode = document.getElementById("editNode_" + todoId);
 
 
         if (!editNode) {
@@ -366,8 +390,9 @@ var app = (function() {
             todoNode.appendChild(editNode);
 
         } else {
-            desc = document.getElementById("editTODO_" + todoId).value = node.todo.getDescription();
+            document.getElementById("editTODO_" + todoId).value = node.todo.getDescription();
         }
+        document.getElementById("editTODO_" + todoId).focus();
         hideNode(todoNode.childNodes[0]);
         showNode(todoNode.childNodes[1]);
     }
@@ -426,12 +451,24 @@ var app = (function() {
 
         if (list) {
             list.removeTodo(todoId);
-            removeTodoFromUI(todoId);
+            removeElementFromUI(todoId);
+        }
+    }
+
+    function deleteList(event) {
+
+        var node = event.target,
+            parentId = node.parentId,
+            list = todoList[parentId];
+
+        if (list) {
+            delete todoList[parentId];
+            removeElementFromUI(parentId);
         }
     }
 
     /*Function to delete a todo from the UI*/
-    function removeTodoFromUI(todoId) {
+    function removeElementFromUI(todoId) {
         var todoNode = document.getElementById(todoId),
             parentNode = todoNode.parentElement;
 
