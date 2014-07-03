@@ -1,0 +1,24 @@
+{
+  "name": "Pure-Javascript-Todo-App",
+  "version": "0.0.0",
+  "description": "A Todo App Purely in Javascript, CSS and HTML . No Preprocressors used",
+  "main": "public/main.js",
+  "dependencies": {
+    "express": "~4.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sanyamagrawal/Pure-Javascript-Todo-App.git"
+  },
+  "author": "Sanyam Agrawal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanyamagrawal/Pure-Javascript-Todo-App/issues"
+  },
+  "homepage": "https://github.com/sanyamagrawal/Pure-Javascript-Todo-App"
+}
